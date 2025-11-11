@@ -1,0 +1,48 @@
+# Instalar / inicializar
+pip install dvc
+cd C:\Users\alvaro.careli\Documents\Telco
+git init                  # se necessário
+dvc init
+git add .dvc .dvcignore
+git commit -m "chore(dvc): init"
+
+# Rastrear dataset
+dvc add Data\raw\WA_Fn-UseC_-Telco-Customer-Churn.csv
+git add Data\raw\WA_Fn-UseC_-Telco-Customer-Churn.csv.dvc .gitignore
+git commit -m "feat(data): track raw telco dataset"
+
+# Configurar remote (ex. local)
+mkdir C:\Users\alvaro.careli\Documents\Telco\dvc_remote
+dvc remote add -d storage file:///C:/Users/alvaro.careli/Documents/Telco/dvc_remote
+
+# Enviar/baixar dados grandes
+dvc push
+dvc pull
+
+# Atualizar dataset (após editar local)
+dvc add Data\raw\WA_Fn-UseC_-Telco-Customer-Churn.csv
+git add Data\raw\WA_Fn-UseC_-Telco-Customer-Churn.csv.dvc
+git commit -m "feat(data): update raw dataset"
+dvc push
+
+# Pipelines / reprodução
+dvc run -n step_name -d script.py -d Data/raw/... -o Data/processed/... python script.py
+dvc repro
+git add dvc.yaml dvc.lock
+git commit -m "feat(pipeline): repro pipeline"
+dvc push
+
+# Status / depuração
+dvc status
+dvc status -c            # compara com remote
+dvc metrics show
+dvc dag                 # mostra grafo do pipeline
+
+# Limpeza / cache
+dvc gc -w                # remove caches não usados no workspace
+dvc cache dir            # mostra diretório de cache
+
+# Boas práticas
+# - Nunca comitar grandes arquivos de dados no git
+# - Commitar sempre .dvc / dvc.yaml / dvc.lock e depois dvc push
+# - Colaboradores: git pull && dvc pull
