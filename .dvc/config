@@ -1,0 +1,4 @@
+[core]
+    remote = storage
+['remote "storage"']
+    url = file:///C:/Users/alvaro.careli/Documents/Telco/dvc_remote
